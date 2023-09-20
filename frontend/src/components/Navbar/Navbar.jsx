@@ -21,17 +21,19 @@ const buttonStyle = {
 
 const Navbar = (props) => {
 	const { currentUser, setCurrentUser } = useContext(AuthContext);
+	const navigate = useNavigate();
 	const today = new Date().toLocaleDateString();
 	const logoutUser = async (e) => {
 		try {
+			setCurrentUser({
+				id: 0
+			});
 			const res = await axios.post(
 				`http://localhost:8000/api/logout/${currentUser.id}`,
 				{}, 
 				{ withCredentials: true }
 			);
-			setCurrentUser({
-				id: 0
-			});
+			navigate("/");
 		} catch (err) {
 			console.log(err);
 		}
@@ -76,8 +78,6 @@ const Navbar = (props) => {
 							</div>
 							<div>
 								<Button
-									component={Link}
-									to={'/'}
 									onClick={logoutUser}
 								>
 									Logout
