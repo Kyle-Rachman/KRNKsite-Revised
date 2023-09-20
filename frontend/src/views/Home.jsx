@@ -20,8 +20,6 @@ const Home = (props) => {
     const navigate = useNavigate();
     const today = new Date().toLocaleDateString();
 
-    // TODO: Add axios request to get random articles for Featured
-
     const registerUser = async (userParam) => {
         try {
             const res = await axios.post(
@@ -29,6 +27,7 @@ const Home = (props) => {
                 userParam,
                 { withCredentials: true }
             );
+            console.log(res)
             setCurrentUser({
                 id: res.data.id
             })
@@ -110,7 +109,7 @@ const Home = (props) => {
             <div className={styles.container}>
                 <div className={styles.header}>
                     <img
-                        src={'../src/assets/logo-placeholder-image.png'}
+                        src={'../src/assets/wireframe-globe.svg'}
                         alt='logo'
                         id={styles.logo}
                     />
@@ -124,7 +123,6 @@ const Home = (props) => {
                     </div>
                 </div>
                 <div className={styles.content}>
-                    {/* TODO: Add articles prop to featured later */}
                     <div className={styles.featured}>
                         <h1>Featured Articles</h1>
                         <Featured></Featured>

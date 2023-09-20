@@ -2,12 +2,14 @@ import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
+import InterestList from "../InterestList";
 import AuthContext from "../Context/AuthContext";
 import styles from "./UserCard.module.css";
 import {Button, TextField } from "@mui/material";
 
 const UserCard = (props) => {
     const { id } = useParams();
+    const { currentUser, setCurrentUser } = useContext(AuthContext);
     const [user, setUser] = useState({
         id: id,
         first_name: "",
@@ -43,6 +45,9 @@ const UserCard = (props) => {
             });
             // Update the user state with the new email
             setUser({ ...user, email: editedEmail });
+            setCurrentPassword("");
+            setEditedEmail("");
+            setEditedPassword("");
         } catch (error) {
             console.error(error);
         }
@@ -57,35 +62,50 @@ const UserCard = (props) => {
 
                 {/* Display the current email */}
                 <p>Email: {user.email}</p>
+                <div className={styles.info}>
 
-                {/* Input field to edit email */}
-                <TextField
-                    label="Edit Email"
-                    value={editedEmail}
-                    onChange={(e) => setEditedEmail(e.target.value)}
-                    variant="outlined"
-                />
+                    {/* Input field to edit email */}
+                    {
+                        (currentUser.id == user.id) && <>
+                            <div className={styles.form}>
+                                <h3>Update User Info</h3>
+                                <TextField
+                                    label="Edit Email"
+                                    value={editedEmail}
+                                    onChange={(e) => setEditedEmail(e.target.value)}
+                                    variant="outlined"
+                                    style={{marginBottom: "20px"}}
+                                />
 
-                <TextField
-                    label="Current Password"
-                    value={currentPassword}
-                    onChange={(e) => setCurrentPassword(e.target.value)}
-                    variant="outlined"
-                    type="password"
-                />
-                {/* Input field to edit password */}
-                <TextField
-                    label="Edit Password"
-                    value={editedPassword}
-                    onChange={(e) => setEditedPassword(e.target.value)}
-                    variant="outlined"
-                    type="password"
-                />
-
-                {/* Button to update user information */}
-                <Button onClick={updateUser} variant="contained" color="primary">
-                    Update
-                </Button>
+                                <TextField
+                                    label="Current Password"
+                                    value={currentPassword}
+                                    onChange={(e) => setCurrentPassword(e.target.value)}
+                                    variant="outlined"
+                                    type="password"
+                                    style={{marginBottom: "20px"}}
+                                />
+                                {/* Input field to edit password */}
+                                <TextField
+                                    label="Edit Password"
+                                    value={editedPassword}
+                                    onChange={(e) => setEditedPassword(e.target.value)}
+                                    variant="outlined"
+                                    type="password"
+                                    style={{marginBottom: "20px"}}
+                                />
+                                {/* Button to update user information */}
+                                <Button onClick={updateUser} variant="contained" color="primary">
+                                    Update
+                                </Button>
+                            </div>
+                        </>
+                    }
+                    <div>
+                        <h3>User Interests</h3>
+                        <InterestList id={currentUser.id || id}></InterestList>
+                    </div>
+                </div>
             </div>
         </>
     );

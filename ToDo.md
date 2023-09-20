@@ -3,14 +3,11 @@
 ## Frontend
 
 ### Kyle
--   [ ] FE styling of received information
--   [ ] Make FE responsive
--   [ ] Add interests display to UserCard.jsx (no update functionality)
--   [ ] Style UserCard.jsx
--   [ ] Add props to Featured.jsx so it can create a digest for each individual user
--   [ ] Make login persist (if time)
--   [ ] Put final touches on Topic.jsx
--   [ ] Update Logo
+-   [ x ] Add interests display to UserCard.jsx (no update functionality)
+-   [ x ] Style UserCard.jsx
+-   [ x ] Add props to Featured.jsx so it can create a digest for each individual user (Done via currentUser.id context)
+-   [ x ] Put final touches on Topic.jsx
+-   [ x ] Update Logo
 
 
 ### David

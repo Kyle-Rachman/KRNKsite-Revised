@@ -7,7 +7,6 @@ import {
 	InputLabel,
 	InputAdornment
 } from '@mui/material';
-import axios from 'axios';
 
 const UserForm = (props) => {
 	const { onSubmitProp, type, errors } = props;

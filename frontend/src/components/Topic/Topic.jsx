@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "../Navbar/Navbar";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
+import { Button } from "@mui/material";
 import styles from "./Topic.module.css";
 
 const Topic = (props) => {
@@ -34,7 +35,8 @@ const Topic = (props) => {
                     return (
                         <div key={idx}>
                             <h3>{paper.title}</h3>
-                            <a href = {paper.pdf_url}>See the Paper!</a>
+                            <Button variant="outlined" component={Link} to={paper.pdf_url}>See the Paper!</Button>
+                            <br /> <br />
                         </div>
                     );
                 })}

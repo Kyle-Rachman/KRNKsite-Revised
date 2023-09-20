@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import styles from "./Featured.module.css"
 import axios from "axios";
+import AuthContext from "../Context/AuthContext";
 
 function shuffleArray(array) {
     let shuffledArray = [...array];
@@ -13,23 +14,29 @@ function shuffleArray(array) {
 }
 
 const Featured = (props) => {
+    const {currentUser, setCurrentUser} = useContext(AuthContext);
     const [articles, setArticles] = useState([]);
     const [shuffledArticles, setShuffledArticles] = useState([]);
 
     useEffect(() => {
         // Fetch articles when the component mounts
-        axios.get("http://127.0.0.1:8000/api/papers/")
-            .then(res => {
-                setArticles(res.data);
-            })
-            .catch(err => {
-                if (err.response) {
-                    console.log(err.response.data);
-                } else {
-                    console.log('Error', err.message);
-                }
-                console.error(err);
-            });
+        if (currentUser.id) {
+            axios.get("http://localhost:8000/api/papers-by-user/" + currentUser.id)
+                .then(res => {
+                    setArticles(res.data);
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        } else {
+            axios.get("http://127.0.0.1:8000/api/papers")
+                .then(res => {
+                    setArticles(res.data);
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        }
     }, []);
 
     useEffect(() => {
