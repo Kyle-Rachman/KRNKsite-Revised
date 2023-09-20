@@ -3,7 +3,7 @@
 ## Frontend
 
 ### Kyle
--   [ ] Fix registration
+-   [ ] Responsive styling
 
 
 ### David
@@ -11,4 +11,5 @@
 ## Backend
 
 ### David
+-   [ ] Fix registration
 -   [ ] Fix user updating
