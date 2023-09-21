@@ -8,7 +8,7 @@ from app.models.topic import Topic
 from app.models.paper import Paper
 from app.models.summary import Summary
 from app.models.associations import user_topics_association
-from app.schemas.user_schema import UserCreateSchema, UserResponseSchema
+from app.schemas.user_schema import UserRegistrationSchema, UserResponseSchema
 from app.routes.users import router as user_router
 
 

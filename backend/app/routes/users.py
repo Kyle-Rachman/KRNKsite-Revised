@@ -2,13 +2,13 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from app.models.user import User
 from app.schemas.user_schema import (
-    UserCreateSchema,
     UserLoginSchema,
     UserUpdateSchema,
     UpdatePasswordSchema,
     UserResponseSchema,
     UserLogoutSchema,
     BasePasswordSchema,
+    UserRegistrationSchema,
 )
 from app.models.topic import Topic
 from app.schemas.topic_schema import TopicResponseSchema
@@ -26,21 +26,8 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-@router.post("/register/", response_model=UserCreateSchema)
-def register_user(user_data: UserCreateSchema, db: Session = Depends(get_db)) -> User:
-    """
-    Register a new user.
-
-    Args:
-        user_data (UserCreateSchema): The user details encapsulated in a Pydantic model.
-        db (Session, optional): The database session. Defaults to `get_db()` dependency.
-
-    Returns:
-        User: The created user object.
-
-    Raises:
-        HTTPException: 400 status if email is already registered.
-    """
+@router.post("/register/", response_model=UserRegistrationSchema)
+def register_user(user_data: UserRegistrationSchema, db: Session = Depends(get_db)) -> User:
     try:
         if db.query(User).filter_by(email=user_data.email).first():
             logger.error("Email already registered: %s", user_data.email)
@@ -56,6 +43,7 @@ def register_user(user_data: UserCreateSchema, db: Session = Depends(get_db)) ->
         db.add(db_user)
         db.commit()
         db.refresh(db_user)
+        logger.debug(f"User ID after commit and refresh: {db_user.id}")
 
         # Create a JWT token
         access_token_expires = 60  # minutes
@@ -63,10 +51,18 @@ def register_user(user_data: UserCreateSchema, db: Session = Depends(get_db)) ->
             data={"sub": db_user.email}, expires_delta=access_token_expires
         )
 
-        return {"user": db_user, "access_token": access_token, "token_type": "bearer"}
-
-        # return db_user
-    
+        # Return the response with the necessary fields
+        return {
+            "id": db_user.id,
+            "first_name": db_user.first_name,
+            "last_name": db_user.last_name,
+            "email": db_user.email,
+            "password": user_data.password, 
+            "confirm_password": user_data.confirm_password, 
+            "is_premium_user": False,  # New users are not premium users
+            "access_token": access_token,
+            "token_type": "bearer",
+        }
 
     except Exception as e:
         logger.error("Error registering user: %s", str(e))
