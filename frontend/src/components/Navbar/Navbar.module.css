@@ -31,9 +31,45 @@
     text-shadow: 1px 1px 1px black;
 }
 
-@media only screen and (max-width: 750px) {
+@media only screen and (min-width: 621px) and (max-width: 750px) {
     .title, .info, .menu {
         transform: scale(0.75);
+    }
+}
+
+@media only screen and (min-width: 476px) and (max-width: 620px) {
+    .menu, .info {
+        transform: scale(0.7);
+    }
+    .title {
+        transform: scale(0.5);
+        margin: 0px -40px;
+    }
+    .header {
+        gap: 0px;
+        justify-content: center;
+        padding: 20px;
+    }
+    .info > p {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 475px) {
+    .menu, .info {
+        transform: scale(0.7);
+    }
+    .title {
+        transform: scale(0.5);
+        margin: 0px -40px;
+    }
+    .header {
+        gap: 0px;
+        justify-content: center;
+        padding: 20px 20px 20px 8px;
+    }
+    .info > p {
+        display: none;
     }
 }
 

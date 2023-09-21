@@ -49,7 +49,9 @@ const Featured = (props) => {
 
     return (
         <>
-            {shuffledArticles.map((article, idx) => (
+            {
+                articles.length ?
+                shuffledArticles.map((article, idx) => (
                 <div className={styles.container} key={idx}>
                     <div className={styles.article}>
                     <h3>{article.title}</h3>
@@ -58,7 +60,12 @@ const Featured = (props) => {
                     </Link>
                     </div>
                 </div>
-            ))}
+                )) :
+                <div className={styles.noArticles}>
+                    <h2>No featured articles!</h2>
+                    <p>Try adding some interests...</p>
+                </div>
+            }
         </>
     )
 }

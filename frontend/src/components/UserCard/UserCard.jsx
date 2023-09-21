@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
-import InterestList from "../InterestList";
+import InterestList from "../InterestList/InterestList";
 import AuthContext from "../Context/AuthContext";
 import styles from "./UserCard.module.css";
 import {Button, TextField } from "@mui/material";
@@ -22,6 +22,10 @@ const UserCard = (props) => {
     const [currentPassword, setCurrentPassword] = useState(""); // State for current password
     const [editedEmail, setEditedEmail] = useState(""); // State for edited email
     const [editedPassword, setEditedPassword] = useState(""); // State for edited password
+    const [formErrors, setFormErrors] = useState({
+        fieldError : "",
+        pwError: ""
+    });
 
     const navigate = useNavigate();
 
@@ -37,11 +41,6 @@ const UserCard = (props) => {
 
     const updateUser = async () => {
         try {
-            console.log("Sending PATCH with data:", {
-                email: editedEmail,
-                current_password: currentPassword,
-                password: editedPassword,
-            });
             // Send a PATCH request to update the user's information
             await axios.patch(`http://localhost:8000/api/user/${id}/update`, {
                 email: editedEmail, // Add the email field for email updates
@@ -53,8 +52,23 @@ const UserCard = (props) => {
             setCurrentPassword("");
             setEditedEmail("");
             setEditedPassword("");
+            setFormErrors({
+                fieldError : "",
+                pwError: ""
+            });
         } catch (error) {
-            console.error(error);
+            if (error.response.status == 401) {
+                setFormErrors(prev => ({
+                    fieldError : "",
+                    pwError: "Incorrect password"
+                }))
+            }
+            if (error.response.status == 422) {
+                setFormErrors(prev => ({
+                    fieldError : "Please fill out all fields",
+                    pwError: ""
+                }))
+            }
         }
     };
 
@@ -92,13 +106,27 @@ const UserCard = (props) => {
                                 />
                                 {/* Input field to edit password */}
                                 <TextField
-                                    label="Edit Password"
+                                    label="Current or New Password"
                                     value={editedPassword}
                                     onChange={(e) => setEditedPassword(e.target.value)}
                                     variant="outlined"
                                     type="password"
                                     style={{marginBottom: "20px"}}
                                 />
+                                {
+                                    formErrors.fieldError ?
+                                    <div className={styles.error}>
+                                        <p>{formErrors.fieldError}</p>
+                                    </div> :
+                                    <></>
+                                }
+                                {
+                                    formErrors.pwError ?
+                                    <div className={styles.error}>
+                                        <p>{formErrors.pwError}</p>
+                                    </div> :
+                                    <></>
+                                }
                                 {/* Button to update user information */}
                                 <Button onClick={updateUser} variant="contained" color="primary">
                                     Update

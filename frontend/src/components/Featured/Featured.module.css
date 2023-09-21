@@ -20,11 +20,6 @@
     padding: 3px 5px;
 }
 
-.articlePicture {
-    height: 3.5rem;
-    width: 3.5rem;
-}
-
 .article > h3 {
     flex: 6 ;
     text-align: left;
@@ -38,5 +33,9 @@
 @media screen and (max-width: 559px) {
     .article > p {
         display: none;
+    }
+    .article > h3 {
+        -webkit-line-clamp: 3;
+        font-size: 1rem;
     }
 }

@@ -16,6 +16,24 @@
     padding: 0px 10px;
     overflow-y: scroll;
     max-height: 75vh;
+    min-height: 25vh;
+}
+
+@media only screen and (max-width: 820px) {
+    .interests > h1 {
+        font-size: 1.5rem;
+    }
+}
+
+@media only screen and (max-width: 620px) {
+    .content {
+        flex-direction: column;
+        height: 70vh;
+    }
+    .interests, .digest {
+        width: 80%;
+        overflow-y: scroll;
+    }
 }
 
 .digest {

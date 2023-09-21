@@ -28,6 +28,27 @@
     text-shadow: 1px 1px 1px black;
 }
 
+@media only screen and (min-width: 486px) and (max-width: 560px) {
+    #logo, .title, .info {
+        transform: scale(0.8);
+    }
+    .header {
+        gap: 30px;
+    }
+}
+
+@media only screen and (max-width: 485px) {
+    #logo, .title {
+        transform: scale(0.8);
+    }
+    .header {
+        gap: 10px;
+    }
+    .featured, .info {
+        display: none;
+    }
+}
+
 .title > h1 {
     margin-bottom: -10px;
 }
