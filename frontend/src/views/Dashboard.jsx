@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import Navbar from '../components/Navbar/Navbar';
 import Digest from '../components/Digest';
-import InterestList from '../components/InterestList';
+import InterestList from '../components/InterestList/InterestList';
 import { Link } from 'react-router-dom';
 import styles from './Dashboard.module.css';
 import AuthContext from '../components/Context/AuthContext';

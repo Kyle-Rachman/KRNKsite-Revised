@@ -1,0 +1,24 @@
+* {
+    margin: 0 auto;
+    padding: 0;
+}
+
+.listStyle {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin: 20px 0px;
+}
+
+.buttonStyle {
+    color: black;
+    border: 1px solid black;
+}
+
+@media only screen and (max-width: 620px) {
+    .listStyle {
+        flex-flow: row wrap;
+        justify-content: center;
+        align-items: center;
+    }
+}

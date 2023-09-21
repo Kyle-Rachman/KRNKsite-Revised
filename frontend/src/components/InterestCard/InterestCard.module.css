@@ -29,3 +29,21 @@
     border: 1px solid black;
     flex: 1;
 }
+
+@media only screen and (min-width: 331px) and (max-width: 620px) {
+    .content {
+        margin: 20vh 5vw;
+    }
+    .topic {
+        gap: 10px;
+    }
+}
+
+@media only screen and (max-width: 330px) {
+    .content {
+        margin: 20vh 5vw 20vh 2vw;
+    }
+    .topic {
+        gap: 10px;
+    }
+}

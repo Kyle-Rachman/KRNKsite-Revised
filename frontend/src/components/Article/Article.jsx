@@ -15,15 +15,6 @@ const Article = (props) => {
         axios.get(`http://localhost:8000/api/paper/get/${id}`)
             .then(res => {
                 setPaper(res.data);
-                // Assuming the paper object contains a "summary_id" field to link to the summary
-                const summaryId = res.data.summary_id;
-
-                // Fetch the summary data using the summary_id from the paper
-                axios.get(`http://localhost:8000/api/summary/get/${summaryId}`)
-                    .then(summaryRes => {
-                        setSummary(summaryRes.data);
-                    })
-                    .catch(err => console.log(err));
             })
             .catch(err => console.log(err));
     }, [id]); // Include "id" as a dependency to re-fetch data when the ID changes
