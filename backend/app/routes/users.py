@@ -1,10 +1,10 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from app.models.user import User
 from app.schemas.user_schema import (
     UserCreateSchema,
     UserLoginSchema,
-    UserInfoUpdateSchema,
+    UserUpdateSchema,
     UpdatePasswordSchema,
     UserResponseSchema,
     UserLogoutSchema,
@@ -146,11 +146,12 @@ def get_user_by_email(user_email: str, db: Session = Depends(get_db)) -> User:
     return user
 
 @router.patch("/user/{user_id}/update", response_model=UserResponseSchema)
-def update_user(
+async def update_user(
         user_id: int,
-    user_data: Union[UserInfoUpdateSchema, UpdatePasswordSchema],
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_user_by_id),  # Get the authenticated user
+        user_data: Union[UserUpdateSchema, UpdatePasswordSchema],
+        request: Request,  # <<< This is where you get the request object
+        db: Session = Depends(get_db),
+        current_user: User = Depends(get_user_by_id),
 ) -> UserResponseSchema:
     # Ensure that the user making the request is the owner of the account
     if current_user.id != user_id:
@@ -158,34 +159,28 @@ def update_user(
             status_code=403,
             detail="You do not have permission to update this user's information.",
         )
-    """
-    Update a user's information by ID.
-
-    Args:
-        user_id (int): The ID of the user to update.
-        user_data (Union[UserInfoUpdateSchema, UpdatePasswordSchema]): The updated user details encapsulated in a Pydantic model.
-        db (Session, optional): The database session. Defaults to `get_db()` dependency.
-
-    Returns:
-        UserResponseSchema: The updated user details encapsulated in a Pydantic model.
-
-    Raises:
-        HTTPException: 404 status if user is not found.
-        HTTPException: 400 status for validation errors or incorrect current password.
-    """
+    
+    # First, retrieve the user from the database
     db_user = db.query(User).filter_by(id=user_id).first()
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
 
-    if isinstance(user_data, UserInfoUpdateSchema):
+    # If the provided user_data is of UserInfoUpdateSchema type
+    if isinstance(user_data, UserUpdateSchema):
         if user_data.email:
             db_user.email = user_data.email
+            print(f"Updated email to {user_data.email}")
+
         if user_data.first_name:
             db_user.first_name = user_data.first_name
+
         if user_data.last_name:
             db_user.last_name = user_data.last_name
 
-    if isinstance(user_data, UpdatePasswordSchema):
+    # If the provided user_data is of UpdatePasswordSchema type
+    elif isinstance(user_data, UpdatePasswordSchema):
+        if user_data.email:
+            db_user.email = user_data.email
         # Verify the current password
         if not User.verify_password(user_data.current_password, db_user.password):
             raise HTTPException(status_code=401, detail="Incorrect current password")
@@ -201,7 +196,7 @@ def update_user(
 
     db.commit()
     db.refresh(db_user)
-
+    
     return UserResponseSchema(
         id=db_user.id,
         first_name=db_user.first_name,

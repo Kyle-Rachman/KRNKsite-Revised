@@ -37,6 +37,11 @@ const UserCard = (props) => {
 
     const updateUser = async () => {
         try {
+            console.log("Sending PATCH with data:", {
+                email: editedEmail,
+                current_password: currentPassword,
+                password: editedPassword,
+            });
             // Send a PATCH request to update the user's information
             await axios.patch(`http://localhost:8000/api/user/${id}/update`, {
                 email: editedEmail, // Add the email field for email updates

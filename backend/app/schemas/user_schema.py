@@ -1,6 +1,7 @@
 from datetime import datetime
 import re
 from pydantic import BaseModel, validator, EmailStr, Field
+from typing import Optional
 
 
 class BasePasswordSchema(BaseModel):
@@ -55,6 +56,7 @@ class UpdatePasswordSchema(BasePasswordSchema):
     """
 
     current_password: str
+    email: Optional[str]
 
 
 class UserCreateSchema(BasePasswordSchema):
@@ -122,7 +124,7 @@ class UserResponseSchema(BaseModel):
     id: int
     first_name: str
     last_name: str
-    email: str
+    email: EmailStr 
     is_premium_user: bool
     created_at: datetime
     updated_at: datetime
@@ -140,3 +142,10 @@ class UserLogoutSchema(BaseModel):
 
     message: str
     
+
+class UserUpdateSchema(BaseModel):
+    first_name: Optional[str]
+    last_name: Optional[str]
+    email: EmailStr
+    current_password: Optional[str]
+    password: Optional[str]
