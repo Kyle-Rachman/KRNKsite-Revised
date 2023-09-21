@@ -1,6 +1,6 @@
 from datetime import datetime
 import re
-from pydantic import BaseModel, validator, EmailStr, Field
+from pydantic import BaseModel, validator, EmailStr, Field, root_validator
 from typing import Optional
 
 
@@ -57,23 +57,40 @@ class UpdatePasswordSchema(BasePasswordSchema):
 
     current_password: str
     email: Optional[str]
+    
 
+# class UserCreateSchema(BasePasswordSchema):
+#     """
+#     Pydantic model for validating user creation data.
 
-class UserCreateSchema(BasePasswordSchema):
-    """
-    Pydantic model for validating user creation data.
+#     Attributes:
+#         first_name (str): The first name of the user. Must be between 1 and 255 characters.
+#         last_name (str): The last name of the user. Must be between 1 and 255 characters.
+#         email (EmailStr): The email address of the user. Must be a valid email format.
+#         is_premium_user (bool): A flag to identify premium users. Defaults to False.
+#     """
+#     id: Optional[int] = None
+#     first_name: str = Field(..., min_length=1, max_length=255)
+#     last_name: str = Field(..., min_length=1, max_length=255)
+#     email: EmailStr
+#     is_premium_user: bool = Field(default=False)
 
-    Attributes:
-        first_name (str): The first name of the user. Must be between 1 and 255 characters.
-        last_name (str): The last name of the user. Must be between 1 and 255 characters.
-        email (EmailStr): The email address of the user. Must be a valid email format.
-        is_premium_user (bool): A flag to identify premium users. Defaults to False.
-    """
-
+    
+class UserRegistrationSchema(BaseModel):
+    id: Optional[int] = None
     first_name: str = Field(..., min_length=1, max_length=255)
     last_name: str = Field(..., min_length=1, max_length=255)
     email: EmailStr
+    password: str
+    confirm_password: str
     is_premium_user: bool = Field(default=False)
+
+    @validator("confirm_password", pre=True, always=True)
+    def validate_passwords_match(cls, confirm_password, values):
+        if "password" in values and confirm_password != values["password"]:
+            raise ValueError("Passwords do not match")
+        return confirm_password
+
 
 class UserLoginSchema(BaseModel):
     """

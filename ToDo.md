@@ -11,5 +11,5 @@
 ## Backend
 
 ### David
--   [ ] Fix registration
--   [ ] Fix user updating
+-   [ x ] Fix registration
+-   [ x ] Fix user updating
